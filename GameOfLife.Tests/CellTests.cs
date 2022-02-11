@@ -5,14 +5,23 @@ namespace GameOfLife.Tests
     [TestFixture]
     public class CellTests
     {
-        private Cell CellUnderTest { get; set; }
-        private Cell[,] Cells { get; set; }
+        private ICell CellUnderTest { get; set; }
+        private Life Simulation { get; set; }
 
 
         [SetUp]
         public void Setup()
         {
-            Cells = new Cell[3, 3];
+            Simulation = new Life(3, 3);
+            for (int i = 0; i < Simulation.Columns; i++)
+            {
+                for (int j = 0; j < Simulation.Rows; j++)
+                {
+                    var cell = new Cell();
+                    Simulation[i, j] = cell;
+                }
+            }
+            CellUnderTest = Simulation[1, 1];
         }
 
         [TestCase(0)]
@@ -20,7 +29,7 @@ namespace GameOfLife.Tests
         public void CellDiesByUnderpopulation(int liveNeighbors)
         {
             // Given
-            SetScenario(liveNeighbors);
+            SetLiveNeighbors(liveNeighbors);
             CellUnderTest.IsAlive = true;
 
             // When
@@ -36,7 +45,7 @@ namespace GameOfLife.Tests
         public void CellSurvivesByStasis(int liveNeighbors)
         {
             // Given
-            SetScenario(liveNeighbors);
+            SetLiveNeighbors(liveNeighbors);
             CellUnderTest.IsAlive = true;
 
             // When
@@ -55,7 +64,7 @@ namespace GameOfLife.Tests
         public void CellDiesByOverpopulation(int liveNeighbors)
         {
             // Given
-            SetScenario(liveNeighbors);
+            SetLiveNeighbors(liveNeighbors);
             CellUnderTest.IsAlive = true;
 
             // When
@@ -70,7 +79,7 @@ namespace GameOfLife.Tests
         public void CellRevivesByReproduction()
         {
             // Given
-            SetScenario(3);
+            SetLiveNeighbors(3);
             CellUnderTest.IsAlive = true;
 
             // When
@@ -82,23 +91,8 @@ namespace GameOfLife.Tests
 
         }
 
-        private void SetScenario(int liveNeighbors)
+        private void SetLiveNeighbors(int liveNeighbors)
         {
-            for (int i = 0; i < Cells.GetLength(0); i++)
-            {
-                for (int j = 0; j < Cells.GetLength(1); j++)
-                {
-                    var cell = new Cell();
-                    Cells[i, j] = cell;
-                    cell.Column = i;
-                    cell.Row = j;
-                    cell.Cells = Cells;
-
-
-                }
-            }
-            CellUnderTest = Cells[1, 1];
-
             foreach (Cell cell in CellUnderTest.Cells)
             {
                 if (cell != CellUnderTest && liveNeighbors-- > 0)
