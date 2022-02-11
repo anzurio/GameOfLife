@@ -1,0 +1,22 @@
+﻿@implements ICell
+<InputCheckbox @bind-Value=IsAlive @bind-Disabled=@(IsDisabled)></InputCheckbox>
+
+@code {
+    private Cell impl = new();
+    public bool IsDisabled { get; set; }
+
+    public bool IsAlive { get => impl.IsAlive; set => impl.IsAlive = value; }
+    public bool WillLive { get => impl.WillLive; set => impl.WillLive = value; }
+
+    [Parameter]
+    public int Row { get => impl.Row; set => impl.Row = value; }
+    [Parameter]
+    public int  Column { get => impl.Column; set => impl.Column = value; }
+    [Parameter]
+    public ICell[,] Cells { get => impl.Cells; set => impl.Cells = value; }
+
+    public List<ICell> Neighbors => impl.Neighbors;
+    public void CalculateNextTick() => impl.CalculateNextTick();
+    public void Tick() => impl.Tick();
+
+}
