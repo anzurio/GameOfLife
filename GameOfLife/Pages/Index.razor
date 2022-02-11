@@ -18,7 +18,7 @@
         
             
     <input type="button" @onclick=Start value="Start" disabled=@SimulationStarted/>
-    <input type="button" @onclick=Randomize value="Randomize" disabled=@SimulationStarted/>    
+    <input type="button" @onclick=Randomize value="Randomize" disabled=@SimulationStarted/>  
     <div>
 
         @for(int j = 0; j < model.Cells.GetLength(1); j++)
@@ -29,7 +29,7 @@
                 var column = i;
                 var row = j;
                 // NOTE to self: this is odd behavior. I need to create temporary variables above instead of using i and j.
-                <CellComponent @ref="model.Cells[column, row]" Row="row" Column="column" Cells="model.Cells"></CellComponent>
+                <CellComponent @ref="model[column, row]"></CellComponent>
             }
             </p>
         }
@@ -82,7 +82,7 @@
     void Start()
     {
         SimulationStarted = true;
-        
+
         model?.ForEachCell(cell =>
         {
             if (cell is CellComponent c)
