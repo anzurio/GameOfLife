@@ -23,10 +23,10 @@
                         {
                             if (!(i == 0 && j == 0))
                             {
-                                if (Row + i >= 0 && Row + i < Cells.GetLength(0) &&
-                                    Column + j >= 0 && Column + j < Cells.GetLength(1))
+                                if (Column + i >= 0 && Column + i < Cells.GetLength(0) &&
+                                    Row + j >= 0 && Row + j < Cells.GetLength(1))
                                 {
-                                    neighbors.Add(Cells[Row + i, Column + j]);
+                                    neighbors.Add(Cells[Column + i, Row + j]);
                                 }
                             }
                         }
