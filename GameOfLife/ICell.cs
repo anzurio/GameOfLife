@@ -7,7 +7,7 @@
         public int Row { get; set; }
         public int Column { get; set; }
         public ICell[,] Cells { get; set; }
-        public List<ICell> Neighbors { get; set; }
+        public List<ICell> Neighbors { get; }
         public void CalculateNextTick();
         public void Tick();
     }
