@@ -1,7 +1,113 @@
 ﻿@page "/"
+@implements IDisposable
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Mario's Game of Life</h1>
 
-Welcome to your new app.
+<EditForm Model=this>
+    @if (model == null)
+    {
+        <div>Create your simulation grid:</div>
+        <span>Columns: <InputNumber @bind-Value=Columns></InputNumber></span>
+        <span>Rows: <InputNumber @bind-Value=Rows></InputNumber></span>
+        <input type="button" @onclick=CreateGame value="Create Game"/>
+    }
+    else
+    {
+        
+            
+    <input type="button" @onclick=Start value="Start" disabled=@SimulationStarted/>
+    <input type="button" @onclick=Randomize value="Randomize" disabled=@SimulationStarted/>    
+    <div>
+
+        @for(int j = 0; j < model.Cells.GetLength(1); j++)
+        {
+            <p class="cell-row">
+            @for(int i = 0; i < model.Cells.GetLength(0); i++)
+            {
+                var row = i;
+                var column = j;
+                // NOTE to self: this is odd behavior. I need to create temporary variables above instead of using i and j.
+                <CellComponent @ref="model.Cells[row, column]" Row="row" Column="column" Cells="model.Cells"></CellComponent>
+            }
+            </p>
+        }
+        </div>
+    }
+</EditForm>
+
+@code
+{
+    private System.Timers.Timer timer;
+    private int columns = 75;
+    private int rows = 25;
+    private Life? model { get; set; }
+    private bool SimulationStarted { get; set; }
+
+    public int Columns 
+    { 
+        get
+        {
+            return columns;
+        }
+        set
+        {
+            if (value >= 1 && value <= 100 )
+            {
+                columns = value;
+            }
+        }
+    }
+    public int Rows 
+    { 
+        get
+        {
+            return rows;
+        }
+        set
+        {
+            if (value >= 1 && value <= 50)
+            {
+                rows = value;
+            }
+        }
+    }
+
+    void CreateGame()
+    {
+        model = new Life(Columns, Rows);
+    }
+
+    void Start()
+    {
+        SimulationStarted = true;
+        
+        model?.ForEachCell(cell =>
+        {
+            if (cell is CellComponent c)
+            {
+                c.IsDisabled = true;
+            }
+        });
+        timer = new System.Timers.Timer(1000);
+        timer.Elapsed += async (src, e) => {
+            model?.Tick();
+            await InvokeAsync(StateHasChanged);
+        };
+        timer.Enabled = true;
+
+    }
+
+    void Randomize()
+    {
+        Random randomNumberGenerator = new Random();
+
+        model?.ForEachCell(cell => cell.IsAlive = randomNumberGenerator.Next(2) == 0);
+    }
+
+    public void Dispose()
+    {
+        timer?.Dispose();
+    }  
+}
