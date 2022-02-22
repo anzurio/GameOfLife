@@ -3,20 +3,46 @@
 
 @code {
     private Cell impl = new();
-    public bool IsDisabled { get; set; }
+    private bool isDisabled;
 
-    public bool IsAlive { get => impl.IsAlive; set => impl.IsAlive = value; }
+    public bool IsDisabled 
+    {
+        get => isDisabled; 
+        set
+        {
+            if (value != isDisabled)
+            {
+                isDisabled = value;
+                StateHasChanged();
+            }
+        }
+    }
+
+    public bool IsAlive 
+    { 
+        get => impl.IsAlive; 
+
+        set 
+        {
+            if (value != impl.IsAlive)
+            {
+                impl.IsAlive = value;
+                StateHasChanged();
+            }
+        }
+    }
     public bool WillLive { get => impl.WillLive; set => impl.WillLive = value; }
 
-    [Parameter]
     public int Row { get => impl.Row; set => impl.Row = value; }
-    [Parameter]
     public int  Column { get => impl.Column; set => impl.Column = value; }
-    [Parameter]
     public ICell[,] Cells { get => impl.Cells; set => impl.Cells = value; }
 
     public List<ICell> Neighbors => impl.Neighbors;
     public void CalculateNextTick() => impl.CalculateNextTick();
-    public void Tick() => impl.Tick();
+    public void Tick()
+    {
+        impl.Tick();
+        StateHasChanged();
+    }
 
 }

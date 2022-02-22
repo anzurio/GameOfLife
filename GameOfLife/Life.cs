@@ -7,8 +7,15 @@
 
         public Life(int columns, int rows)
         {
+            Columns = columns;
+            Rows = rows;
             Cells = new ICell[columns, rows];
         }
+
+        public int Columns { get; private set; }
+        
+        public int Rows { get; private set; }
+        
 
         public void Tick()
         {
@@ -27,6 +34,21 @@
             }
 
             cells.ForEach(predicate);
+        }
+
+        public ICell this[int i, int j]
+        {
+            get
+            {
+                return Cells[i,j];
+            }
+            set
+            {
+                Cells[i,j] = value;
+                value.Cells = this.Cells;
+                value.Column = i;
+                value.Row = j;
+            }
         }
 
     }

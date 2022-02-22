@@ -15,19 +15,18 @@
         {
             get
             {
-                if (neighbors.Count == 0)
+                neighbors.Clear();
+                
+                for (int i = -1; i <= 1; i++)
                 {
-                    for (int i = -1; i <= 1; i++)
+                    for (int j = -1; j <= 1; j++)
                     {
-                        for (int j = -1; j <= 1; j++)
+                        if (!(i == 0 && j == 0))
                         {
-                            if (!(i == 0 && j == 0))
+                            if (Column + i >= 0 && Column + i < Cells.GetLength(0) &&
+                                Row + j >= 0 && Row + j < Cells.GetLength(1))
                             {
-                                if (Row + i >= 0 && Row + i < Cells.GetLength(0) &&
-                                    Column + j >= 0 && Column + j < Cells.GetLength(1))
-                                {
-                                    neighbors.Add(Cells[Row + i, Column + j]);
-                                }
+                                neighbors.Add(Cells[Column + i, Row + j]);
                             }
                         }
                     }
